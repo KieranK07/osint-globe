@@ -37,7 +37,7 @@ export const satellitesConnector: Connector = {
   refreshIntervalMs: 5_000,
   enabledByDefault: true,
   async poll({ logger, env }) {
-    const group = env.SAT_GROUP ?? 'visual';
+    const group = env.SAT_GROUP || 'visual';
     const tles = await loadTles(group);
     const now = new Date();
     const gmst = satellite.gstime(now);

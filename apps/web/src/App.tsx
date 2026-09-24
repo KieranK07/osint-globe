@@ -3,7 +3,7 @@ import type { LayerId } from '@osint-globe/shared';
 import { LiveStore } from './live.js';
 import { Globe } from './Globe.js';
 
-const WS_URL = (import.meta.env.VITE_GATEWAY_WS as string) ?? 'ws://localhost:4000/ws';
+const WS_URL = (import.meta.env.VITE_GATEWAY_WS as string | undefined) || 'ws://localhost:4000/ws';
 
 export function App() {
   const store = useMemo(() => new LiveStore(), []);

@@ -7,7 +7,7 @@ import { Store } from './store.js';
 import { Registry } from './registry.js';
 import { connectors } from './connectors/index.js';
 
-const PORT = Number(process.env.PORT ?? 4000);
+const PORT = Number(process.env.PORT || 4000);
 
 const store = new Store();
 const clients = new Set<WebSocket>();
