@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "description": "An open-source OSINT world: live flights, satellites, vessels, cameras and 3D geometry on a single zoomable globe.",
+  "license": "MIT",
   "workspaces": [
     "packages/*",
     "apps/*"
