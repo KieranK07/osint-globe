@@ -95,5 +95,5 @@ official DOT/traffic feeds that are meant to be public.
 - Swap thousands of Cesium entities for `PointPrimitiveCollection` + clustering.
 - Client-side SGP4 re-propagation between satellite polls for smooth orbits
   (TLEs are already shipped in each satellite entity's `properties`).
-- Persistence/replay: add Postgres + PostGIS (see `docker-compose.yml`) to store
+- Persistence/replay: add Postgres + PostGIS to store
   tracks and scrub back through time.
