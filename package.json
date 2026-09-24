@@ -2,7 +2,7 @@
   "name": "osint-globe",
   "private": true,
   "version": "0.1.0",
-  "description": "An open-source OSINT world: live flights, satellites, vessels, cameras and 3D geometry on a single zoomable globe.",
+  "description": "3D globe of live flights, satellites, ships and world events from open data.",
   "license": "MIT",
   "workspaces": [
     "packages/*",
