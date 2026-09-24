@@ -1,0 +1,73 @@
+:root {
+  color-scheme: dark;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root, .app, .globe {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.app { position: relative; overflow: hidden; }
+.globe { position: absolute; inset: 0; }
+
+.panel {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 300px;
+  max-height: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  background: rgba(12, 16, 24, 0.82);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #e7edf5;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.panel header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.panel header h1 { font-size: 15px; margin: 0; flex: 1; letter-spacing: 0.02em; }
+
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #f0a020; }
+.dot.live { background: #3ddc84; box-shadow: 0 0 8px #3ddc84; }
+
+.layers { list-style: none; margin: 0; padding: 8px; overflow-y: auto; }
+.layers li { padding: 8px; border-radius: 8px; }
+.layers li:hover { background: rgba(255, 255, 255, 0.04); }
+.layers label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.layers .title { flex: 1; font-size: 13px; }
+.layers .count {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: #8fa3bd;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.layers .desc { margin: 4px 0 0 24px; font-size: 11px; color: #8fa3bd; line-height: 1.4; }
+.layers .muted { color: #8fa3bd; font-size: 13px; }
+
+.threed {
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.threed label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.threed .desc { margin: 4px 0 0 24px; font-size: 11px; color: #8fa3bd; line-height: 1.4; }
+
+.panel footer {
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8fa3bd;
+}
