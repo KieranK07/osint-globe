@@ -1,70 +1,77 @@
 # OSINT Globe
 
-Status: early prototype; flights, satellites and events work without keys.
+![Globe with live flights, satellites and world events](docs/img/globe.png)
 
-An open-source intelligence world on a single zoomable 3D globe. Aggregates live,
-internet-sourced geospatial data — flights, satellites, vessels, public webcams,
-street-level imagery and photoreal 3D geometry — and streams it to a Cesium globe
-you can fly into anywhere on Earth.
+Status: early prototype.
 
-> **Ethics & legality.** This project aggregates **openly published** data only.
-> It deliberately does **not** scan for, index, or surface private/"unsecured"
-> camera feeds or any source that requires bypassing authentication — doing so is
-> unlawful in most jurisdictions. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#data-source-policy).
+A 3D Cesium globe that shows openly published geospatial data: live flights,
+satellites, world events, and optionally ships and public webcams. A small
+gateway polls each source and streams updates to the browser over WebSocket.
+
+Only openly published data is used. The project does not scan for or surface
+private or unsecured camera feeds, or any source that needs authentication
+bypassed. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md#data-source-policy).
+
+## Layers
+
+| Layer            | Source                                   | Key needed                          |
+| ---------------- | ---------------------------------------- | ----------------------------------- |
+| Flights          | OpenSky Network (ADS-B)                  | No (`OPENSKY_USER`/`PASS` raise limits) |
+| Satellites       | CelesTrak TLEs, propagated with SGP4     | No                                  |
+| World events     | USGS earthquakes, NASA EONET             | No                                  |
+| Vessels          | AISStream.io                             | Yes, `AISSTREAM_KEY`                |
+| Public webcams   | Windy Webcams API                        | Yes, `WINDY_WEBCAMS_KEY`            |
+| Terrain, 3D buildings | Cesium ion                          | Yes, `VITE_CESIUM_ION_TOKEN`        |
+| Photoreal 3D tiles | Google Photorealistic 3D Tiles         | Yes, `VITE_GOOGLE_3DTILES_KEY`      |
+
+Without a Cesium ion token the globe falls back to OpenStreetMap imagery.
 
 ## Stack
 
-| Layer    | Tech                                                              |
-| -------- | ---------------------------------------------------------------- |
-| Frontend | React + Vite + **CesiumJS** (3D globe, terrain, 3D tiles)         |
-| Gateway  | Fastify + WebSocket — polls connectors, diffs, streams live data |
-| Shared   | TypeScript contract (`Entity` / `LayerId`) used by both sides    |
-| Data     | Pluggable **connectors**, one per source                         |
-
-## Live now
-
-- **Flights** — OpenSky Network (ADS-B), global, no key required
-- **Satellites** — CelesTrak TLEs propagated with SGP4 (`satellite.js`)
-- **World events** — USGS earthquakes + NASA EONET (wildfires, storms, volcanoes), no key
-- **Vessels** — live AIS ships via AISStream.io (optional key)
-- **Public webcams** — Windy Webcams API (optional key)
-- **Photoreal 3D geometry** — toggle for Google 3D Tiles, or OSM Buildings with an ion token
-
-See the roadmap in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for street-level
-imagery, geofencing/watchlists, entity dossiers, an AI analyst and more.
+- Frontend: React, Vite, CesiumJS (`apps/web`)
+- Gateway: Fastify and WebSocket; polls connectors, diffs, streams (`apps/gateway`)
+- Shared: TypeScript `Entity` / `LayerId` types (`packages/shared`)
 
 ## Quick start
 
+Requires Node 22.9 or newer.
+
 ```bash
 npm install
-cp .env.example .env      # optional keys enable more layers / terrain
-npm run dev               # gateway :4000 + web :5173
+cp .env.example .env      # optional; fill in keys for the keyed layers
+npm run dev               # gateway on :4000, web on :5173
 ```
 
-Open http://localhost:5173. Flights and satellites stream immediately with no keys.
-Add a free [Cesium ion token](https://cesium.com/ion) to `VITE_CESIUM_ION_TOKEN`
-for world terrain and 3D buildings.
+Open http://localhost:5173. Flights, satellites and events load with no keys.
+Both the gateway and the web app read the single `.env` at the repo root.
 
-Run pieces individually:
+Run the pieces separately:
 
 ```bash
-npm run dev:gateway       # backend only
-npm run dev:web           # frontend only
-curl localhost:4000/api/layers
+npm run dev:gateway
+npm run dev:web
+curl localhost:4000/api/health
 curl localhost:4000/api/layers/flights | head
 ```
 
 ## Add a data source
 
-Implement the `Connector` interface and register it — the REST API, WebSocket
-stream and frontend layer list pick it up automatically:
+Implement the `Connector` interface and register it. The REST API, WebSocket
+stream and layer list pick it up automatically.
 
 ```ts
 // apps/gateway/src/connectors/mything.ts
 export const myConnector: Connector = {
   id: 'mything', layer: 'incidents', title: 'My Source', description: '…',
   refreshIntervalMs: 30_000,
-  async poll(ctx) { /* fetch → return Entity[] */ return []; },
+  async poll(ctx) { /* fetch, return Entity[] */ return []; },
 };
 // then add it to apps/gateway/src/connectors/index.ts
 ```
+
+The roadmap (street-level imagery, watchlists, persistence) is in
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## License
+
+MIT
