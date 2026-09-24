@@ -1,0 +1,41 @@
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.env
+.env.local
+.DS_Store
+*.log
+.cache/
+coverage/
+
+# secrets (keep .env.example)
+.env.*
+!.env.example
+*.pem
+*.key
+
+# local tool settings
+.claude/settings.local.json
+
+# collected / scraped OSINT output — never commit
+data/
+output/
+out/
+captures/
+snapshots/
+exports/
+tracks/
+dossiers/
+*.sqlite
+*.sqlite3
+*.db
+*.ndjson
+*.jsonl
+*.har
+*.pcap
+pgdata/
+
+# build / cache
+node_modules/.vite/
+.vite/
